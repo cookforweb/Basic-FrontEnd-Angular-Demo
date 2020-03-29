@@ -1,0 +1,191 @@
+<app-main-content>
+
+
+    <app-page-title [title]="'Home'"></app-page-title>
+
+
+    <div class="" *ngIf="$posts">
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <button class="btn btn-sm btn-success font-weight-bold font-family-exo"
+                    (click)="newEntity()"><i class="fas fa-plus mr-2"></i> Create new</button>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <span class="small font-family-exo font-weight-bold">
+                    Page: {{ pageArgs.currentPage }} of {{ pageArgs.pagesTotal }}
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped small">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>Body</th>
+                            <th width="120">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let post of $posts | paging: pageArgs">
+                            <td>{{ post.title }}</td>
+                            <td>{{ post.body }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-success mr-1" (click)="viewEntity(post)"><i class="far fa-eye"></i></button>
+                                <button class="btn btn-sm btn-outline-info mr-1" (click)="editEntity(post)"><i class="far fa-edit"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" (click)="deleteEntity(post)"><i class="far fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <app-pagination [args]="pageArgs" (setPage)="changePageState($event)"></app-pagination>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="" *ngIf="! $posts">
+
+        <div class="row border-top">
+            <div class="col-12 text-center">
+                <h4 class="my-5">No results found</h4>
+            </div>
+        </div>
+    </div>
+
+</app-main-content>
+
+
+
+<!-- Modal for confirming view -->
+<app-modal [title]="'View Post'"
+           [size]="'small'"
+           [isActive]="viewModal"
+           (doInactive)="closeModal('viewModal', $event)">
+    <div class="my-5">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8">
+                <h3 class="text-center font-weight-bolder font-family-exo">View post</h3>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-5" *ngIf="previewPost">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-4">ID</div>
+                    <div class="col-8">{{ previewPost.id }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-4">UserId</div>
+                    <div class="col-8">{{ previewPost.userId }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-4">Title</div>
+                    <div class="col-8">{{ previewPost.title }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-4">Body</div>
+                    <div class="col-8">{{ previewPost.body }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <a class="btn btn-danger w-100" href="javascript:void(0)"
+                   (click)="viewModal = false">Close</a>
+            </div>
+        </div>
+    </div>
+</app-modal>
+
+
+<!-- Modal for confirming view -->
+<app-modal [title]="'Post form'"
+           [size]="'small'"
+           [isActive]="editModal"
+           (doInactive)="closeModal('editModal', $event)">
+    <div class="my-5">
+        <form [formGroup]="entityForm" (ngSubmit)="onSubmit()">
+
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input formControlName="title" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Body</label>
+                        <textarea formControlName="body" type="text" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>User</label>
+                        <select class="form-control" formControlName="userId">
+                            <option value="1">Admin</option>
+                            <option value="2">User</option>
+                            <option value="3">Guest</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-sm btn-danger w-100" (click)="closeModal('editModal', {value: false})">Cancel</button>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-sm btn-success w-100">Save</button>
+                </div>
+            </div>
+
+            <div class="row justify-content-center" *ngIf="discardChanges">
+                <div class="col-md-9">
+                    <button type="button" class="btn btn-sm btn-link w-100" (click)="closeModal('editModal', {value: false, hard: true})">Click here if you want to discard your changes and close modal</button>
+                </div>
+            </div>
+
+            <input type="hidden" formControlName="id" />
+        </form>
+    </div>
+</app-modal>
+
+
+<!-- Modal for confirming deletion -->
+<app-modal [title]="'Confirm Delete'"
+           [size]="'small'"
+           [isActive]="deleteModal"
+           (doInactive)="closeModal('deleteModal', $event)">
+    <div class="my-5">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8">
+                <h3 class="text-center font-weight-bolder font-family-exo">Are you sure you want to delete this Post?</h3>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <a class="btn btn-info btn-lg w-100" href="javascript:void(0)"
+                   (click)="confirmDeleteEntity()">Yes</a>
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-danger btn-lg w-100" href="javascript:void(0)"
+                   (click)="deleteModal = false">No</a>
+            </div>
+        </div>
+    </div>
+</app-modal>
+
+

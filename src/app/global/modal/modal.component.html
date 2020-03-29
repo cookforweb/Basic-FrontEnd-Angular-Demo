@@ -1,0 +1,14 @@
+<div class="modalbox-wrapper" [ngClass]="{'active' : isActive, 'is-loading': loading }">
+    <div class="modalbox-overlay" (click)="doCloseModal(true)"></div>
+    <div class="modalbox-content" [ngClass]="size">
+        <div class="modalbox-header bg-primary">
+            <div class="modalbox-title">
+                {{ title }}
+                <i class="fas fa-times" (click)="doCloseModal(true)"></i>
+            </div>
+        </div>
+        <div class="modalbox-body">
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>

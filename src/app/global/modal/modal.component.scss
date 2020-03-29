@@ -1,0 +1,169 @@
+$fade_duration: 400ms;
+
+.modalbox-wrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 49;
+  perspective: 500px;
+  visibility: hidden;
+  .modalbox-overlay, .modalbox-content {
+    -webkit-transition: opacity $fade_duration, visibility $fade_duration, transform $fade_duration;
+    -moz-transition: opacity $fade_duration, visibility $fade_duration, transform $fade_duration;
+    -ms-transition: opacity $fade_duration, visibility $fade_duration, transform $fade_duration;
+    -o-transition: opacity $fade_duration, visibility $fade_duration, transform $fade_duration;
+    transition: opacity $fade_duration, visibility $fade_duration, transform $fade_duration;
+  }
+  .modalbox-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(14, 15, 17, 0.64);
+    z-index: 48;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .modalbox-content {
+    background-color: #ffffff;
+    position: absolute;
+    top: 10vh;
+    left: 50%;
+    z-index: 50;
+    &.small {
+      width: 600px;
+    }
+    &.medium {
+      width: 800px;
+    }
+    &.large {
+      width: 960px;
+    }
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) rotateX(10deg) scale(0.9);
+    transform-origin: center 90%;
+    .modalbox-header {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(197, 197, 197, 0.84);
+      .modalbox-title {
+        color: #ffffff;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05rem;
+        > i.fa-times {
+          position: absolute;
+          font-size: 1rem;
+          right: 0;
+          top: 0;
+          padding: 1rem;
+          cursor: pointer;
+        }
+      }
+    }
+    .modalbox-body {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      max-height: 80vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+  // Styling when modal is active
+  &.is-loading {
+    .modalbox-content {
+      &:after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.8);
+        content: '';
+        display: block;
+        z-index: 99;
+      }
+
+      &:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        content: '';
+        display: block;
+        //background-image: url("../../../assets/images/full-logo.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100px auto;
+        z-index: 101;
+        left: 0;
+        -webkit-animation: flickerAnimation 1s infinite;
+        -moz-animation: flickerAnimation 1s infinite;
+        -o-animation: flickerAnimation 1s infinite;
+        animation: flickerAnimation 1s infinite;
+      }
+    }
+  }
+  &.active {
+    .modalbox-overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modalbox-content {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) rotateX(0deg) scale(1);
+    }
+  }
+}
+
+@keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
